@@ -42,12 +42,10 @@ class meme(commands.Cog):
                 response = requests.request("GET", url, headers=headers)
 
                 json_data = json.loads(response.text)
-                meme = json_data["postLink"]
                 title = json_data["title"]
                 image = json_data["url"]
                 em = discord.Embed(title=title, color=ctx.author.color)
                 em.set_image(url=image)
-                em.set_footer(text=meme)
                 await ctx.send(embed=em)
 
 async def setup(bot):
