@@ -66,6 +66,17 @@ class MyBot(commands.Bot):
     async def on_ready(self):
         await self.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"over {len(self.guilds)} servers!"))
 
+        for guild in self.guilds:
+            try:
+                channel = discord.utils.get(guild.text_channels, name="general")
+
+                if channel:
+                    em = discord.Embed(title="Official Message", description=f"**An official message from Tropii (Owner and Developer of Blob).**\n\nWe are restarting Blob and bringing him back to life! We are also open to adding new features and other things.\n\nPlease join the new support server for more information!\n\n**[Join the Support Server](https://discord.gg/kuYNHR6Rrx)**", color=discord.Color.green())
+
+                    await channel.send(embed=em)
+            except:
+                pass
+
 # making var for commands in this file
 bot = MyBot()
 
