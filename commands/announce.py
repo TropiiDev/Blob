@@ -46,7 +46,9 @@ class announce(commands.Cog):
                 msg = await self.bot.wait_for("message", check=check, timeout=10)
                 if msg.content == "delete":
                     coll.delete_one({"_id": {"guild_id": ctx.guild.id}})
-                    await ctx.send("Announcement channel deleted")
+                    await ctx.send("Announcement channel deleted, adding new channel...")
+                    coll.insert_one({"_id": {"guild_id": ctx.guild.id}, "channel": channel.id})
+                    await ctx.send("Announcement channel set")
             except asyncio.TimeoutError:
                 await ctx.send("You took too long to respond")
                 return
@@ -67,6 +69,7 @@ class announce(commands.Cog):
             channel_id = coll.find_one({"_id": {"guild_id": ctx.guild.id}})["channel"]
             channel = discord.utils.get(ctx.guild.text_channels, id=channel_id)
             await channel.send(message)
+            await ctx.send("Announcement sent!", delete_after=2.0)
 
         else:
             await ctx.send("You have not set an announcement channel yet")
