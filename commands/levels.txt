@@ -1,0 +1,103 @@
+import discord, pymongo, os
+from discord.ext import commands
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class levels(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("Levels Online")
+
+    def is_enabled(self):
+        client = pymongo.MongoClient(os.getenv("mongo_url"))
+        db = client.servers
+        coll = db.settings
+
+        if coll.find_one({"_id": {"guild_id": self.guild.id, "commands":"levels"}}):
+            command = coll.find_one({"_id": {"guild_id": self.guild.id, "commands":"levels"}})
+            command_enabled = command["enabled"] # True or False
+            if command_enabled:
+                return True
+            else:
+                return False
+        else:
+            return True
+
+    @commands.Cog.listener()
+    @commands.check(is_enabled)
+    async def on_message(self, message):
+        cluster = pymongo.MongoClient(os.getenv("mongo_url"))
+        db = cluster.servers
+        collection = db.levels
+
+        if message.author.bot:
+            return
+
+        if message.content.startswith(self.bot.command_prefix):
+            return
+
+        if message.guild is None:
+            return
+
+        if collection.count_documents({"_id": {"author_id": message.author.id, "guild_id": message.guild.id}}) == 0:
+            collection.insert_one({"_id": {"author_id": message.author.id, "guild_id": message.guild.id}, "xp": 1, "level": 0})
+        else:
+            new_xp = 15
+            collection.update_one({"_id": {"author_id": message.author.id, "guild_id": message.guild.id}}, {"$inc": {"xp": new_xp}})
+
+            xp = collection.find_one({"_id": {"author_id": message.author.id, "guild_id": message.guild.id}})["xp"]
+            level = collection.find_one({"_id": {"author_id": message.author.id, "guild_id": message.guild.id}})["level"]
+
+            if xp >= 100*level:
+                new_level = 1
+                collection.update_one({"_id": {"author_id": message.author.id, "guild_id": message.guild.id}}, {"$inc": {"level": new_level}})
+                collection.update_one({"_id": {"author_id": message.author.id, "guild_id": message.guild.id}}, {"$set": {"xp": 0}})
+                # find a channel named blobs levels and send a message in that channel if the channel doesnt exist then make it and send a message in that channel
+                # await message.channel.send(f"{message.author.mention} has leveled up to level {level + 1}!"
+                await message.channel.send(f"{message.author.mention} has leveled up to level {level + 1}!")
+
+    @commands.hybrid_command(name="rank", description="Shows your rank", aliases=["level"])
+    @commands.check(is_enabled)
+    async def rank(self, ctx, member: discord.Member = None):
+        if member is None:
+            member = ctx.author
+
+        cluster = pymongo.MongoClient(os.getenv("mongo_url"))
+        db = cluster.servers
+        collection = db.levels
+        
+        new_xp = 5
+
+        if collection.count_documents({"_id": {"author_id": member.id, "guild_id": ctx.guild.id}}) == 0:
+            collection.insert_one({"_id": {"author_id": member.id, "guild_id": ctx.guild.id}, "xp": 0, "level": 0})
+        else:
+            xp = collection.find_one({"_id": {"author_id": member.id, "guild_id": ctx.guild.id}})["xp"]
+            level = collection.find_one({"_id": {"author_id": member.id, "guild_id": ctx.guild.id}})["level"]
+
+            embed = discord.Embed(title=f"{member.name}'s Rank", description=f"Level: {level}\nXP: {xp}\nRank Up XP: {100*level}\nNext Level {100*level - xp}", color=discord.Color.green())
+            await ctx.send(embed=embed)
+
+    @commands.command(aliases=["lb"])
+    @commands.check(is_enabled)
+    async def leaderboard(self, ctx):
+        cluster = pymongo.MongoClient(os.getenv("mongo_url"))
+        db = cluster.servers
+        collection = db.levels
+
+        leaderboard = collection.find({"_id.guild_id": ctx.guild.id}).sort("level", pymongo.DESCENDING).limit(10)
+
+        # check if leaderboard has less than 10 users and then say that there isn't enough users to make a leaderboard
+        if collection.count_documents({"_id": {"author_id": ctx.author.id, "guild_id": ctx.guild.id}}) < 10:
+            await ctx.send("Not enough users to make a leaderboard")
+            return
+
+        embed = discord.Embed(title="Leaderboard", description="Top 10", color=discord.Color.green())
+        for i, user in enumerate(leaderboard):
+            embed.add_field(name=f"{i+1}. {self.bot.get_user(user['_id']['author_id'])}", value=f"Level: {user['level']}\nXP: {user['xp']}", inline=False)
+
+async def setup(bot):
+    await bot.add_cog(levels(bot))
