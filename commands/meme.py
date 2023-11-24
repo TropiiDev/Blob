@@ -42,8 +42,8 @@ class meme(commands.Cog):
                 response = requests.request("GET", url, headers=headers)
 
                 json_data = json.loads(response.text)
-                title = json_data["title"]
-                image = json_data["url"]
+                title = json_data[1]
+                image = json_data[2]
                 em = discord.Embed(title=title, color=ctx.author.color)
                 em.set_image(url=image)
                 await ctx.send(embed=em)
