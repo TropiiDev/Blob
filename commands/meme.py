@@ -42,9 +42,9 @@ class meme(commands.Cog):
                 response = requests.request("GET", url, headers=headers)
 
                 json_data = json.loads(response.text)
-                title = json_data[1]
-                await ctx.send(title)
-                image = json_data[2]
+                new_data = json_data[1]
+                title = new_data["title"]
+                image = new_data["url"]
                 em = discord.Embed(title=title, color=ctx.author.color)
                 em.set_image(url=image)
                 await ctx.send(embed=em)
