@@ -43,6 +43,7 @@ class meme(commands.Cog):
 
                 json_data = json.loads(response.text)
                 title = json_data[1]
+                await ctx.send(title)
                 image = json_data[2]
                 em = discord.Embed(title=title, color=ctx.author.color)
                 em.set_image(url=image)
