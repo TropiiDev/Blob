@@ -65,21 +65,9 @@ class announce(commands.Cog):
         db = client.servers
         coll = db.announce
 
-        ak = coll.find_one({"_id": {"guild_id": ctx.guild.id}})
-
-        await ctx.send(ak)
-
-
         if coll.find_one({"_id": {"guild_id": ctx.guild.id}}):
-            channel = coll.find_one({"_id": {"guild_id": ctx.guild.id}, "channel": ctx.channel.id})
-            if channel == False:
-                await ctx.send("You can only use this command in the announcement channel")
-                return
-            else:
-                newchannel = channel['channel']
-                channelll = self.bot.get_channel(newchannel)
-                await channelll.send(message)
-                await ctx.send("Announcement sent", delete_after=2)
+            channel = coll.find_one({"_id": {"guild_id": ctx.guild.id}})["channel"]
+            await channel.send(message)
 
         else:
             await ctx.send("You have not set an announcement channel yet")

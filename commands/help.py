@@ -15,7 +15,7 @@ class Select(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         if self.values[0] == "Staff Commands":
             em = discord.Embed(title="Staff Commands", description="Here are all the staff commands", color=interaction.user.color)
-            em.add_field(name="announce", value="Announce a message in the Announcements channel (Can only be used in the official PL server), Example: -announce Announcing a message", inline=False)
+            em.add_field(name="announce", value="Announce a message in the Announcements channel, Example: -announce Announcing a message", inline=False)
             em.add_field(name="clear", value="Bulk deletes messages, Example: -clear 5", inline=False)
             em.add_field(name="kick", value="Kicks a member from the server, Example: -kick @Tropiiツ", inline=False)
             em.add_field(name="ban", value="Ban a member from the server, Example: -ban @Tropiiツ", inline=False)

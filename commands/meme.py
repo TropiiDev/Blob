@@ -41,6 +41,9 @@ class meme(commands.Cog):
             async with session.get("https://reddit-meme.p.rapidapi.com/memes/trending") as response:    
                 response = requests.request("GET", url, headers=headers)
 
+        embed = discord.Embed(title=response.json()['title'], color=discord.Color.random())
+        await ctx.send(embed=embed)
+
         await ctx.send(response.json())
 
 async def setup(bot):
