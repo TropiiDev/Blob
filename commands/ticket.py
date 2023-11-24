@@ -70,7 +70,7 @@ class CreateButton(View):
         em = discord.Embed(description="Someone will be here to assist you shortly.\nTo close this ticket react with 🔒",color=interaction.user.color)
         em.set_footer(text="Powered by Blob", icon_url=interaction.guild.me.avatar)
 
-        await channel.send(f"{interaction.user.mention} Welcome to your ticket.\n\nPlease don't ping staff, they will be here soon.\n\n",embed=em, view=CloseButton())
+        await channel.send(f"{interaction.user.mention} Welcome to your ticket. {r1.mention}\n\nPlease don't ping staff, they will be here soon.\n\n",embed=em, view=CloseButton())
         await interaction.followup.send(f"Ticket created in {channel.mention}", ephemeral=True)
         await send_log(
             title="Ticket Created",

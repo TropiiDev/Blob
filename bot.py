@@ -66,14 +66,6 @@ class MyBot(commands.Bot):
     async def on_ready(self):
         await self.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"over {len(self.guilds)} servers!"))
 
-        for guild in self.guilds:
-            # find the channel named "commands"
-            if discord.utils.get(guild.text_channels, name="general"):
-                channel = discord.utils.get(guild.text_channels, name="general")
-                await channel.send("Hello Again!\n\nThis is an official message from the developer of Blob. We are continuing development of Blob and it will resume normal operations shortly.\n\nA lot has changed since the last time Blob was online. We are here to address your issues with our new discord server. Please join [now](https://discord.gg/A2EQDvA6sN).\n\nI (Tropii) hate to send messages to through servers with stuff like this, I do apologize. For further information please join the support server below!\n\nTake care - Tropii.\n\nHave any conerns? Feel free to add me `fstropii`\n\nIf you see this message more than once please let me know ASAP!")
-            else:
-                pass
-
 # making var for commands in this file
 bot = MyBot()
 
