@@ -45,10 +45,8 @@ class announce(commands.Cog):
             try:
                 msg = await self.bot.wait_for("message", check=check, timeout=10)
                 if msg.content == "delete":
-                    a = coll.find_one({"_id": {"guild_id": ctx.guild.id}})
-                    b = a["channel"]
-                    coll.delete_one({"_id": {"guild_id": ctx.guild.id}, channel: b})
-                    await ctx.send("Deleted the announcement channel")
+                    coll.delete_one({"_id": {"guild_id": ctx.guild.id}})
+                    await ctx.send("Announcement channel deleted")
             except asyncio.TimeoutError:
                 await ctx.send("You took too long to respond")
                 return
