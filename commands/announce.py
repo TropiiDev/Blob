@@ -64,7 +64,8 @@ class announce(commands.Cog):
         coll = db.announce
 
         if coll.find_one({"_id": {"guild_id": ctx.guild.id}}):
-            channel = coll.find_one({"_id": {"guild_id": ctx.guild.id}})["channel"]
+            channel_id = coll.find_one({"_id": {"guild_id": ctx.guild.id}})["channel"]
+            channel = discord.utils.get(ctx.guild.text_channels, id=channel_id)
             await channel.send(message)
 
         else:
