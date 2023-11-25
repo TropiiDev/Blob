@@ -32,6 +32,7 @@ class Select(discord.ui.Select):
             em.add_field(name="unlock", value="Unlocks a channel, Example: -unlock", inline=False)
             em.add_field(name="trash", value="Delete a ticket, Example: -trash", inline=False)
             em.add_field(name="remove", value="Removes a role from a user, Example: -remove @Tropiiツ @Owner", inline=False)
+            em.add_field(name="joinrole", value="Set the role a user gets on join, Example: -joinrole @Member", inline=False)
             await interaction.response.send_message(embed=em, ephemeral=True)
         elif self.values[0] == "Normal Commands":
             em1 = discord.Embed(title="Normal Commands", description="Here are all the normal commands", color=interaction.user.color)
