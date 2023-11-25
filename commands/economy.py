@@ -131,6 +131,8 @@ class economy(commands.Cog):
     @commands.hybrid_command(name="eleaderboard", description="View the leaderboard", aliases=["elb"])
     @commands.cooldown(1, 60, commands.BucketType.user)
     async def eleaderboard(self, ctx):
+        await ctx.send("Command disabled")
+"""
         client = pymongo.MongoClient(os.getenv("mongo_url"))
         db = client.servers
         coll = db.economy
@@ -140,7 +142,7 @@ class economy(commands.Cog):
         for i in range(10):
             embed.add_field(name=f"{i+1}. {ctx.guild.get_member(users[i]['_id']['author_id']).display_name}", value=f"{users[i]['coins']} bloboons", inline=False)
         await ctx.send(embed=embed)
-            
+"""
 
 async def setup(bot):
     await bot.add_cog(economy(bot))
