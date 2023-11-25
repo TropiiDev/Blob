@@ -25,6 +25,10 @@ def is_enabled(self):
 class BronzeButton(View):
     def __init__(self):
         super().__init__(timeout=None)
+        self.add_item(SilverButton())
+        self.add_item(GoldButton())
+        self.add_item(DiamondButton())
+        self.add_item(EmeraldButton())
 
     @button(label="Buy Bronze", style=discord.ButtonStyle.blurple, custom_id="bronze")
     async def bronze(self, interaction: discord.Interaction, button: Button):
