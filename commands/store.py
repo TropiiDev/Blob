@@ -198,11 +198,11 @@ class store(commands.Cog):
 
         await ctx.send(
             embed=em,
-            view=BronzeButton(),
-            view=SilverButton(),
-            view=GoldButton(),
-            view=DiamondButton(),
-            view=EmeraldButton()
+            view=BronzeButton()
+            #view=SilverButton(),
+            #view=GoldButton(),
+            #view=DiamondButton(),
+            #view=EmeraldButton()
         )
 
 async def setup(bot):
