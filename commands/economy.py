@@ -138,7 +138,7 @@ class economy(commands.Cog):
         users = sorted(users, key=lambda x: x["coins"], reverse=True)
         embed = discord.Embed(title="Leaderboard", description="The top 10 richest people in the server", color=discord.Color.blue())
         for i in range(10):
-            embed.add_field(name=f"{i+1}. {ctx.guild.get_member(users[i]['_id']['author_id']).name}", value=f"{users[i]['coins']} bloboons", inline=False)
+            embed.add_field(name=f"{i+1}. {ctx.guild.get_member(users[i]['_id']['author_id']).display_name}", value=f"{users[i]['coins']} bloboons", inline=False)
         await ctx.send(embed=embed)
             
 
