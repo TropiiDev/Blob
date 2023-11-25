@@ -31,11 +31,13 @@ class meme(commands.Cog):
     @commands.hybrid_command(name="meme", description="Shows a random meme")
     @commands.check(is_enabled)
     async def meme(self, ctx):
-        url = "https://reddit-meme.p.rapidapi.com/memes/top"
+        url = "https://humor-jokes-and-memes.p.rapidapi.com/memes/random"
+
+        querystring = {"number":"1","media-type":"image","keywords-in-image":"false","min-rating":"4"}
 
         headers = {
-            "X-RapidAPI-Key": "5f878d0f8dmshe3320b9c7df0e88p1b8038jsnf03c5763a129",
-	        "X-RapidAPI-Host": "reddit-meme.p.rapidapi.com"
+            "X-RapidAPI-Key": "fc3dac086bmsh835062c787b309ep1c9d10jsnf9716a0fe3fb",
+	        "X-RapidAPI-Host": "humor-jokes-and-memes.p.rapidapi.com"
         }
         async with aiohttp.ClientSession() as session:
             async with session.get("https://reddit-meme.p.rapidapi.com/memes/trending") as response:    
