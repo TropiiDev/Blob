@@ -21,79 +21,81 @@ def is_enabled(self):
                 return False
         else:
             return True
+        
+class Select(discord.ui.Select):
+    def __init__(self):
+        options=[
+            discord.SelectOption(label="Bronze Ticket", emoji="🚫", description="Cost: 100 bloboons"),
+            discord.SelectOption(label="Silver Ticket", emoji="👍", description="Cost: 200 bloboons"),
+            discord.SelectOption(label="Gold Ticket", emoji="👍", description="Cost: 400 bloboons"),
+            discord.SelectOption(label="Diamond Ticket", emoji="👍", description="Cost: 800 bloboons"),
+            discord.SelectOption(label="Emerald Ticket", emoji="👍", description="Cost: 1600 bloboons"),
+        ]
+        super().__init__(custom_id="buyticket", placeholder="What ticket do you want to buy?", max_values=1, min_values=1, options=options)
 
-class BronzeButton(View):
+    async def callback(self, interaction: discord.Interaction):
+        if self.values[0] == "Bronze Ticket":
+            await interaction.response.defer(ephemeral=True)
+            client = pymongo.MongoClient(os.getenv("mongo_url"))
+            db = client.servers
+            coll = db.economy
+
+            cost = 100
+            guild = interaction.guild
+            user = interaction.user
+
+            userColl = coll.find_one({"_id": {'author_id': user.id, 'guild_id': guild.id}})
+
+            if not userColl:
+                await interaction.followup.send("You don't have any coins!", ephemeral=True)
+                return
+            
+            if userColl["coins"] < cost:
+                await interaction.followup.send("You don't have enough coins!", ephemeral=True)
+                return
+            
+            if userColl["coins"] >= cost:
+                coll.update_one({"_id": {'author_id': user.id, 'guild_id': guild.id}}, {"$inc":{"coins":-cost}})
+                coll.update_one({"_id": {"author_id": user.id, "guild_id": guild.id}}, {"$set": {"bought": "bronze"}})
+                await interaction.followup.send("You bought the bronze ticket! Redeem it in the Blob support server for rewards!", ephemeral=True)
+                return
+        elif self.values[0] == "Silver Ticket":
+            await interaction.response.defer(ephemeral=True)
+            client = pymongo.MongoClient(os.getenv("mongo_url"))
+            db = client.servers
+            coll = db.economy
+
+            cost = 200
+            guild = interaction.guild
+            user = interaction.user
+
+            userColl = coll.find_one({"_id": {'author_id': user.id, 'guild_id': guild.id}})
+
+            if not userColl:
+                await interaction.followup.send("You don't have any coins!", ephemeral=True)
+                return
+            
+            if userColl["coins"] < cost:
+                await interaction.followup.send("You don't have enough coins!", ephemeral=True)
+                return
+            
+            if userColl["coins"] >= cost:
+                coll.update_one({"_id": {'author_id': user.id, 'guild_id': guild.id}}, {"$inc":{"coins":-cost}})
+                coll.update_one({"_id": {"author_id": user.id, "guild_id": guild.id}}, {"$set": {"bought": "silver"}})
+                await interaction.followup.send("You bought the silver ticket! Redeem it in the Blob support server for rewards!", ephemeral=True)
+                return
+        
+class SelectView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(SilverButton())
-        self.add_item(GoldButton())
-        self.add_item(DiamondButton())
-        self.add_item(EmeraldButton())
-
-    @button(label="Buy Bronze", style=discord.ButtonStyle.blurple, custom_id="bronze")
-    async def bronze(self, interaction: discord.Interaction, button: Button):
-        await interaction.response.defer(ephemeral=True)
-        client = pymongo.MongoClient(os.getenv("mongo_url"))
-        db = client.servers
-        coll = db.economy
-
-        cost = 100
-        guild = interaction.guild
-        user = interaction.user
-
-        userColl = coll.find_one({"_id": {'author_id': user.id, 'guild_id': guild.id}})
-
-        if not userColl:
-            await interaction.followup.send("You don't have any coins!", ephemeral=True)
-            return
-        
-        if userColl["coins"] < cost:
-            await interaction.followup.send("You don't have enough coins!", ephemeral=True)
-            return
-        
-        if userColl["coins"] >= cost:
-            coll.update_one({"_id": {'author_id': user.id, 'guild_id': guild.id}}, {"$inc":{"coins":-cost}})
-            coll.update_one({"_id": {"author_id": user.id, "guild_id": guild.id}}, {"$set": {"bought": "bronze"}})
-            await interaction.followup.send("You bought the bronze ticket! Redeem it in the Blob support server for rewards!", ephemeral=True)
-            return
-        
-class SilverButton(View):
-    def __init__(self):
-        super().__init__(timeout=None)
-
-    @button(label="Buy Silver", style=discord.ButtonStyle.blurple, custom_id="silver")
-    async def bronze(self, interaction: discord.Interaction, button: Button):
-        await interaction.response.defer(ephemeral=True)
-        client = pymongo.MongoClient(os.getenv("mongo_url"))
-        db = client.servers
-        coll = db.economy
-
-        cost = 200
-        guild = interaction.guild
-        user = interaction.user
-
-        userColl = coll.find_one({"_id": {'author_id': user.id, 'guild_id': guild.id}})
-
-        if not userColl:
-            await interaction.followup.send("You don't have any coins!", ephemeral=True)
-            return
-        
-        if userColl["coins"] < cost:
-            await interaction.followup.send("You don't have enough coins!", ephemeral=True)
-            return
-        
-        if userColl["coins"] >= cost:
-            coll.update_one({"_id": {'author_id': user.id, 'guild_id': guild.id}}, {"$inc":{"coins":-cost}})
-            coll.update_one({"_id": {"author_id": user.id, "guild_id": guild.id}}, {"$set": {"bought": "silver"}})
-            await interaction.followup.send("You bought the silver ticket! Redeem it in the Blob support server for rewards!", ephemeral=True)
-            return
+        self.add_item(Select())
 
 class GoldButton(View):
     def __init__(self):
         super().__init__(timeout=None)
 
     @button(label="Buy Gold", style=discord.ButtonStyle.blurple, custom_id="gold")
-    async def bronze(self, interaction: discord.Interaction, button: Button):
+    async def gold(self, interaction: discord.Interaction, button: Button):
         await interaction.response.defer(ephemeral=True)
         client = pymongo.MongoClient(os.getenv("mongo_url"))
         db = client.servers
@@ -124,7 +126,7 @@ class DiamondButton(View):
         super().__init__(timeout=None)
 
     @button(label="Buy Diamond", style=discord.ButtonStyle.blurple, custom_id="diamond")
-    async def bronze(self, interaction: discord.Interaction, button: Button):
+    async def diamond(self, interaction: discord.Interaction, button: Button):
         await interaction.response.defer(ephemeral=True)
         client = pymongo.MongoClient(os.getenv("mongo_url"))
         db = client.servers
@@ -202,11 +204,8 @@ class store(commands.Cog):
 
         await ctx.send(
             embed=em,
-            view=BronzeButton()
-            #view=SilverButton(),
-            #view=GoldButton(),
-            #view=DiamondButton(),
-            #view=EmeraldButton()
+            view=DiamondButton(),
+            view=GoldButton(),
         )
 
 async def setup(bot):
