@@ -9,8 +9,8 @@ def is_enabled(self):
         db = client.servers
         coll = db.settings
 
-        if coll.find_one({"_id": {"guild_id": self.guild.id, "commands":"ticket"}}):
-            command = coll.find_one({"_id": {"guild_id": self.guild.id, "commands":"ticket"}})
+        if coll.find_one({"_id": {"guild_id": self.guild.id, "commands":"redeem"}}):
+            command = coll.find_one({"_id": {"guild_id": self.guild.id, "commands":"redeem"}})
             command_enabled = command["enabled"] # True or False
             if command_enabled:
                 return True
