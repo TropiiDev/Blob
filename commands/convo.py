@@ -28,6 +28,13 @@ class convo(commands.Cog):
     async def on_ready(self):
         print("Convo Online")
 
+    @commands.hybrid_command(name="convosetup", description="Sets up a conversation channel")
+    @commands.has_permissions(administrator=True)
+    @commands.check(is_enabled)
+    async def convosetup(self, ctx, channel: discord.TextChannel = None):
+        await ctx.send("API for this command is no longer active. Convo disabled until further notice")
+
+"""
     @commands.Cog.listener()
     async def on_message(self, message):
         client = pymongo.MongoClient(os.getenv("mongo_url"))
@@ -64,26 +71,7 @@ class convo(commands.Cog):
                     response = requests.request("GET", url, headers=headers)
 
             await channelll.send(response.json()['message'])
-
-    @commands.hybrid_command(name="convosetup", description="Sets up a conversation channel")
-    @commands.has_permissions(administrator=True)
-    @commands.check(is_enabled)
-    async def convosetup(self, ctx, channel: discord.TextChannel = None):
-        client = pymongo.MongoClient(os.getenv("mongo_url"))
-        db = client.servers
-        coll = db.convo
-
-        if channel == None:
-            channel = ctx.channel
-
-        channell = coll.find_one({"_id": {"guild_id": ctx.guild.id}, "channel": channel.id})
-
-        if channell == None:
-            coll.insert_one({"_id": {"guild_id": ctx.guild.id}, "channel": channel.id})
-            await ctx.send("Conversation channel setup!")
-
-        else:
-            await ctx.send("Conversation channel is already setup!")
+"""
 
 
 async def setup(bot):

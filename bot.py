@@ -45,7 +45,7 @@ intents.members = True
 # create the bot
 class MyBot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=get_server_prefix, intents = intents)
+        super().__init__(command_prefix=commands.when_mentioned_or(get_server_prefix), intents = intents)
         self.synced = False
         self.warnings = {}
         self.remove_command("help")     
