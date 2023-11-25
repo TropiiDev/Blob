@@ -1,4 +1,4 @@
-from commands import help, ticket
+from commands import help, ticket, store
 
 # pip install imports
 import discord, aiofiles
@@ -55,6 +55,7 @@ class MyBot(commands.Bot):
         self.add_view(ticket.CreateButton())
         self.add_view(ticket.CloseButton())
         self.add_view(ticket.TrashButton())
+        self.add_view(store.SelectView())
         print(f'\33[32mLogged in as {self.user} (ID: {self.user.id})')
         print('------')
 
