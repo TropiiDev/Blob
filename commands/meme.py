@@ -43,16 +43,18 @@ class meme(commands.Cog):
             async with session.get("https://reddit-meme.p.rapidapi.com/memes/trending") as response:    
                 response = requests.request("GET", url, headers=headers)
 
-        await ctx.send(response.json())
-"""
-    json_data = json.loads(response.text)
-    new_data = json_data[0]
-    title = new_data["title"]
-    image = new_data["url"]
-    em = discord.Embed(title=title, color=ctx.author.color)
-    em.set_image(url=image)
-    await ctx.send(embed=em)
-"""
+                json_data = json.loads(response.text)
+                description = json_data["description"]
+                url = json_data["url"]
+
+                embed = discord.Embed(
+                    title="Meme",
+                    description=description,
+                    color=ctx.author.color
+                )
+                embed.set_image(url=url)
+                await ctx.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(meme(bot))
