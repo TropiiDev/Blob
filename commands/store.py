@@ -35,19 +35,19 @@ class BronzeButton(View):
 
         cost = 100
         guild = interaction.guild
-        user = interaction.user 
+        user = interaction.user
 
-        user = coll.find_one({"_id": {'author_id': user.id, 'guild_id': guild.id}})
+        userColl = coll.find_one({"_id": {'author_id': user.id, 'guild_id': guild.id}})
 
-        if not user:
+        if not userColl:
             await interaction.followup.send("You don't have any coins!", ephemeral=True)
             return
         
-        if user["coins"] < cost:
+        if userColl["coins"] < cost:
             await interaction.followup.send("You don't have enough coins!", ephemeral=True)
             return
         
-        if user["coins"] >= cost:
+        if userColl["coins"] >= cost:
             coll.update_one({"_id": {'author_id': user.id, 'guild_id': guild.id}}, {"$inc":{"coins":-cost}})
             coll.update_one({"_id": {"author_id": user.id, "guild_id": guild.id}}, {"$set": {"bought": "bronze"}})
             await interaction.followup.send("You bought the bronze ticket! Redeem it in the Blob support server for rewards!", ephemeral=True)
