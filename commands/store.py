@@ -61,7 +61,7 @@ class store(commands.Cog):
     async def on_ready(self):
         print('Tickets Online')
 
-    @commands.hybrid_command(name="ticket", description="Create a ticket")
+    @commands.hybrid_command(name="store", description="View the store")
     @commands.has_permissions(administrator=True)
     @commands.check(is_enabled)
     async def ticket(self, ctx):
