@@ -25,11 +25,11 @@ def is_enabled(self):
 class Select(discord.ui.Select):
     def __init__(self):
         options=[
-            discord.SelectOption(label="Bronze Ticket", emoji="🚫", description="Cost: 100 bloboons"),
-            discord.SelectOption(label="Silver Ticket", emoji="👍", description="Cost: 200 bloboons"),
-            discord.SelectOption(label="Gold Ticket", emoji="👍", description="Cost: 400 bloboons"),
-            discord.SelectOption(label="Diamond Ticket", emoji="👍", description="Cost: 800 bloboons"),
-            discord.SelectOption(label="Emerald Ticket", emoji="👍", description="Cost: 1600 bloboons"),
+            discord.SelectOption(label="Bronze Ticket", emoji="🥉", description="Cost: 100 bloboons"),
+            discord.SelectOption(label="Silver Ticket", emoji="🥈", description="Cost: 200 bloboons"),
+            discord.SelectOption(label="Gold Ticket", emoji="🥇", description="Cost: 400 bloboons"),
+            discord.SelectOption(label="Diamond Ticket", emoji="💎", description="Cost: 800 bloboons"),
+            discord.SelectOption(label="Emerald Ticket", emoji="🟢", description="Cost: 1600 bloboons"),
         ]
         super().__init__(custom_id="buyticket", placeholder="What ticket do you want to buy?", max_values=1, min_values=1, options=options)
 
