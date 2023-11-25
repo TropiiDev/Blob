@@ -34,8 +34,14 @@ class joinrole(commands.Cog):
         client = pymongo.MongoClient(os.getenv("mongo_url"))
         db = client.servers
         coll = db.roles
+        roles = coll.find_one({"_id": {"guild_id": ctx.guild.id}})
+        if not roles:
+            coll.insert_one({"_id": {"guild_id": ctx.guild.id}, "joinrole": role.id})
+            await ctx.send(f"Set the joinrole to {role.mention}!")
+            return
+        else:
+            coll.update_one({"_id": {"guild_id": ctx.guild.id}}, {"$set": {"joinrole": role.id}})
 
-        coll.update_one({"_id": {"guild_id": ctx.guild.id, "commands":"joinrole"}}, {"$set": {"joinrole": role.id}})
         await ctx.send(f"Set the joinrole to {role.mention}!")
 
     @commands.Cog.listener()
@@ -44,7 +50,7 @@ class joinrole(commands.Cog):
         db = client.servers
         coll = db.roles
 
-        joinrole = coll.find_one({"_id": {"guild_id": member.guild.id, "commands":"joinrole"}})
+        joinrole = coll.find_one({"_id": {"guild_id": member.guild.id}})
         if joinrole:
             role = member.guild.get_role(joinrole["joinrole"])
             await member.add_roles(role)
