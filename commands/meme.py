@@ -31,7 +31,7 @@ class meme(commands.Cog):
     @commands.hybrid_command(name="meme", description="Shows a random meme")
     @commands.check(is_enabled)
     async def meme(self, ctx):
-        url = "https://reddit-meme.p.rapidapi.com/memes/trending"
+        url = "https://reddit-meme.p.rapidapi.com/memes/top"
 
         headers = {
             "X-RapidAPI-Key": "5f878d0f8dmshe3320b9c7df0e88p1b8038jsnf03c5763a129",
@@ -41,13 +41,16 @@ class meme(commands.Cog):
             async with session.get("https://reddit-meme.p.rapidapi.com/memes/trending") as response:    
                 response = requests.request("GET", url, headers=headers)
 
-                json_data = json.loads(response.text)
-                new_data = json_data[1]
-                title = new_data["title"]
-                image = new_data["url"]
-                em = discord.Embed(title=title, color=ctx.author.color)
-                em.set_image(url=image)
-                await ctx.send(embed=em)
+        await ctx.send(response.json())
+"""
+    json_data = json.loads(response.text)
+    new_data = json_data[0]
+    title = new_data["title"]
+    image = new_data["url"]
+    em = discord.Embed(title=title, color=ctx.author.color)
+    em.set_image(url=image)
+    await ctx.send(embed=em)
+"""
 
 async def setup(bot):
     await bot.add_cog(meme(bot))
