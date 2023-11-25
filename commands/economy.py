@@ -28,7 +28,6 @@ class economy(commands.Cog):
             await ctx.send(f"{ctx.author.mention} begged for money and got {num} bloboons!")
 
     @commands.hybrid_command(name="balance", description="Check your balance", aliases=["bal"])
-    @commands.cooldown(1, 60, commands.BucketType.user)
     async def balance(self, ctx, member:discord.Member = None):
         client = pymongo.MongoClient(os.getenv("mongo_url"))
         db = client.servers
