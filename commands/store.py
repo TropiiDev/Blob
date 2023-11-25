@@ -204,8 +204,7 @@ class store(commands.Cog):
 
         await ctx.send(
             embed=em,
-            view=DiamondButton(),
-            view=GoldButton(),
+            view=SelectView()
         )
 
 async def setup(bot):
