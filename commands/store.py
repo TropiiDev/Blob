@@ -176,7 +176,7 @@ class store(commands.Cog):
     @commands.hybrid_command(name="store", description="View the store")
     @commands.check(is_enabled)
     async def store(self, ctx):
-        em = discord.Embed(title="Shop!", description="Spend some Bloboons to get cool rewards! Redeem in supported servers!", color=ctx.author.color)
+        em = discord.Embed(title="Shop!", description="Spend some Bloboons to get cool rewards! Redeem in supported servers! Currently has no use", color=ctx.author.color)
         em.add_field(name="Bronze Ticket", value="100 Bloboons", inline=False)
         em.add_field(name="Silver Ticket", value="200 Bloboons", inline=False)
         em.add_field(name="Gold Ticket", value="400 Bloboons", inline=False)
