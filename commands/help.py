@@ -63,6 +63,7 @@ class Select(discord.ui.Select):
             em1.add_field(name="leaderboard", value="See the leaderboard, Example: -leaderboard", inline=False)
             em1.add_field(name="slots", value="Play slots, Example: -slots", inline=False)
             em1.add_field(name="rob", value="Rob someone, Example: -rob @Tropiiツ", inline=False)
+            em1.add_field(name="redeem", value="Redeem a ticket, Example: -redeem bronze", inline=False)
             await interaction.response.send_message(embed=em1, ephemeral=True)
 
 class SelectView(discord.ui.View):
